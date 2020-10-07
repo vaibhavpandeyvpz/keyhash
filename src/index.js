@@ -11,5 +11,4 @@ render(
   document.getElementById('root')
 );
 
-
 register();
