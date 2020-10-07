@@ -1,0 +1,19 @@
+$primary: #003580;
+$secondary: #feba02;
+$info: #0099e5;
+
+$body-bg: #f3f4f7;
+
+$border-radius-sm: .25em;
+$border-radius: .5em;
+$border-radius-lg: .75em;
+
+$font-family-monospace: "Roboto Mono", monospace;
+$font-family-sans-serif: "Roboto", sans-serif;
+
+$input-focus-border-color: $secondary;
+$input-focus-box-shadow: none;
+
+$link-color: $info;
+
+@import "~bootstrap/scss/bootstrap";
