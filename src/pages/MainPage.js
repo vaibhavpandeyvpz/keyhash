@@ -27,15 +27,23 @@ export default () => {
                     certificates.forEach(certificate => {
                         const sha1 = new jsSHA('SHA-1', 'UINT8ARRAY', { encoding: 'UTF8' });
                         sha1.update(certificate.chain[0].value);
-                        const hex = sha1.getHash('HEX');
-                        const fingerprint = Array.from(sha1.getHash('UINT8ARRAY'), function(byte) {
+                        const sha1hex = sha1.getHash('HEX');
+                        const sha1fingerprint = Array.from(sha1.getHash('UINT8ARRAY'), function(byte) {
+                            return ('0' + (byte & 0xFF).toString(16)).slice(-2);
+                        }).join(':');
+                        const sha256 = new jsSHA('SHA-256', 'UINT8ARRAY', { encoding: 'UTF8' });
+                        sha256.update(certificate.chain[0].value);
+                        const sha256hex = sha256.getHash('HEX');
+                        const sha256fingerprint = Array.from(sha256.getHash('UINT8ARRAY'), function(byte) {
                             return ('0' + (byte & 0xFF).toString(16)).slice(-2);
                         }).join(':');
                         const base64 = sha1.getHash('B64');
                         results.push({
                             alias: certificate.alias,
-                            hex,
-                            fingerprint: fingerprint.toUpperCase(),
+                            sha1hex,
+                            sha1fingerprint: sha1fingerprint.toUpperCase(),
+                            sha256hex,
+                            sha256fingerprint: sha256fingerprint.toUpperCase(),
                             base64,
                         })
                     });
@@ -63,16 +71,20 @@ export default () => {
                                 <i className="fas fa-arrow-left mr-1"></i> Back
                             </button>
                         </div>
-                        {hashes.map(({ alias, hex, fingerprint, base64 }) => (
+                        {hashes.map(({ alias, sha1hex, sha1fingerprint, sha256hex, sha256fingerprint, base64 }) => (
                             <div className="card-body border-top">
                                 <h5 className="card-title text-secondary">{alias}</h5>
                                 <div className="text-nowrap overflow-auto">
                                     <small style={{'lineHeight': '.75em'}}>
-                                        <strong className="bg-light">SHA-1 + Hex:</strong><br/><span className="text-monospace">{hex}</span>
+                                        <strong>SHA-1 + Hex:</strong><br/><span className="text-monospace">{sha1hex}</span>
                                         <br />
-                                        <strong className="bg-light">SHA-1 + Fingerprint:</strong><br/><span className="text-monospace">{fingerprint}</span>
+                                        <strong>SHA-1 + Fingerprint:</strong><br/><span className="text-monospace">{sha1fingerprint}</span>
                                         <br />
-                                        <strong className="bg-light">SHA-1 + Base64:</strong><br/><span className="text-monospace">{base64}</span>
+                                        <strong>SHA-1 + Base64:</strong><br/><span className="text-monospace">{base64}</span>
+                                        <br />
+                                        <strong>SHA-256 + Hex:</strong><br/><span className="text-monospace">{sha256hex}</span>
+                                        <br />
+                                        <strong>SHA-256 + Fingerprint:</strong><br/><span className="text-monospace">{sha256fingerprint}</span>
                                     </small>
                                 </div>
                             </div>
@@ -83,7 +95,7 @@ export default () => {
                         <div className="card-body">
                             <h1 className="h5 card-title text-primary">Keyhash</h1>
                             <p className="card-text">
-                                Tool to generate <strong>SHA-1</strong> <em>Hex</em> or <em>Base64</em> values from signing certificates inside a Java keystore, required for setting up login with <strong>Facebook</strong> &amp; <strong>Google</strong> on Android.
+                                Tool to generate <strong>SHA-1/SHA-256</strong> <em>Hex</em> or <em>Base64</em> values from signing certificates inside a Java keystore, required for setting up login with <strong>Facebook</strong> &amp; <strong>Google</strong> on Android.
                             </p>
                         </div>
                         <div className="card-body border-top">
