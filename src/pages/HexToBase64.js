@@ -1,14 +1,10 @@
 import React, { useState } from 'react';
-import classNames from "classnames";
+import classNames from 'classnames';
 
 export default () => {
     const [errors, setErrors] = useState({});
     const [hex, setHex] = useState(null);
     const [base64, setBase64] = useState('');
-    const handleReset = () => {
-        setHex(null);
-        setBase64('');
-    };
     const handleSubmit = e => {
         e.preventDefault();
         setErrors({});
@@ -16,7 +12,7 @@ export default () => {
         try {
             const ints = hex.split(':');
             if (ints.length !== 20) {
-                throw 'Bad SHA-1 fingerprint. Invalid format.'
+                throw new Error('Bad SHA-1 fingerprint. Invalid format.')
             }
 
             const sha1 = ints.map(c => String.fromCharCode(parseInt(c, 16))).join('');
